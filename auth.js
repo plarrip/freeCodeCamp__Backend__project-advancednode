@@ -6,8 +6,6 @@ const bcrypt = require('bcrypt');
 const GitHubStrategy = require('passport-github').Strategy;
 
 module.exports = function (app, myDataBase){
-    console.log('Auth module loaded!'); // Add this
-
 
     // prepare user serialisation
   passport.serializeUser((user, done) => {
@@ -42,7 +40,6 @@ module.exports = function (app, myDataBase){
     callbackURL: 'http://localhost:8080/auth/github/callback'
   },
     function(accessToken, refreshToken, profile, cb){
-        console.log('GitHub strategy configured!'); // Add this
         console.log(profile);
         myDataBase.findOneAndUpdate(
             { id: profile.id },

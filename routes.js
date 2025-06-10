@@ -26,7 +26,7 @@ module.exports = function (app, myDataBase){
     // LOGIN ROUTE - POST request with passport authentication ('local' strategy)
     app.route('/login')
         .post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
-        res.redirect('/profile');
+        res.redirect('/chat');
         });
 
     // PROFILE ROUTE - Render profile page
@@ -71,7 +71,7 @@ module.exports = function (app, myDataBase){
     },
         passport.authenticate('local', { failureRedirect: '/' }),
         (req, res, next) => {
-        res.redirect('/profile');
+        res.redirect('/chat');
         }
     );
 
@@ -80,10 +80,15 @@ module.exports = function (app, myDataBase){
 
     app.route('/auth/github/callback')
         .get(passport.authenticate('github', { failureRedirect: '/' }), (req, res) => {
-            res.redirect('/profile');
+            req.session.user_id = req.user.id;
+            res.redirect('/chat');
         }
     );
 
+    app.route('/chat')
+        .get(ensureAuthenticated, (req, res) => {
+            res.render('chat', { user: req.user })
+        });
 
     // Handling missing pages (Error 404)
     app.use((req, res, next) => {
